@@ -18,7 +18,7 @@ class TextClassifier(object):
         :param lambda_mixture - (Extra Credit) This param controls the proportion of contribution of Bigram
         and Unigram model in the mixture model. Hard Code the value you find to be most suitable for your model
         """
-        self.lambda_mixture = 0.7
+        self.lambda_mixture = 1
         # word_mat has words for col and label in row
         # It shows the log P(Word|Type=Ci)
         self.word_mat = []
@@ -47,11 +47,7 @@ class TextClassifier(object):
         # Unique words in the train_set
 
         # Initialize the word_mat and p_class
-        stat_class = []
-        for i in train_label:
-            if i not in stat_class:
-                stat_class.append(i)
-        length = len(stat_class)
+        length = 14
         self.feature_mat = [["" for col in range(20)] for row in range(length)]
         self.word_mat = [{"":0.0} for row in range(length)]
         self.ec_mat = [{("",""):0.0} for row in range(length)]
@@ -86,6 +82,9 @@ class TextClassifier(object):
             self.p_class[i] = math.log(self.p_class[i]) - math.log(self.total)
 
         # Save feature_mat
+        print(self.total)
+        print(self.num_of_all_words)
+        print(self.p_class)
         A = self.word_mat.copy()
         for type in range(length):
             self.feature_mat[type] = sorted(A[type], key=A[type].get, reverse=True)[:20]
@@ -109,7 +108,6 @@ class TextClassifier(object):
                 else:
                     temp[i][(m,n)] = math.log(self.ec_mat[i][(m,n)]+1) - math.log(sum_bi+self.num_of_all_words_bi)
         self.ec_mat = temp.copy()
-
 
         pass
 
@@ -159,7 +157,7 @@ class TextClassifier(object):
                             b_label[type_i] -= self.word_mat[type_i][sentence[word_i-1]]
                         else:
                             b_label[type_i] -= -math.log(self.num_class[type_i]+self.num_of_all_words)
-
+            print(p_label)
             t_label = [0.0 for i in range(len(self.word_mat))]
             for type_i in range(len(self.word_mat)):
                 t_label[type_i] = p_label[type_i] * self.lambda_mixture + b_label[type_i] * (1-self.lambda_mixture)
@@ -183,13 +181,13 @@ class TextClassifier(object):
             for j in range(len(confusion_mat[i])):
                 confusion_mat[i][j]/=sum
 
-        print("Confusion Matrix:")
-        print(confusion_mat)
-        print()
-
-        print("Feature words:")
-        print(self.feature_mat)
-        print()
+        # print("Confusion Matrix:")
+        # print(confusion_mat)
+        # print()
+        #
+        # print("Feature words:")
+        # print(self.feature_mat)
+        # print()
 
         count_correct = 0.0
         for i in range(len(result)):

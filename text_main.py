@@ -60,12 +60,12 @@ def load_dataset(data_dir=''):
     :return: both the train and test data sets
     """
     stop_words=read_stop_words(data_dir+'stop_words.csv')
+    #print('\x1b[6;30;42m' + "--------------Get stop_words--------------"+'\x1b[0m')
     x_train, y_train = readFile(data_dir+'train_text.csv',stop_words)
     x_test, y_test = readFile(data_dir+'dev_text.csv',stop_words)
-    print('\x1b[6;30;42m' + "--------------Get x_train--------------"+'\x1b[0m')
-    print(x_train)
-    print(y_train)
-
+    ##print(y_train)
+    print(x_test)
+    print(y_test)
     return x_train,y_train,x_test,y_test
 
 def compute_results(actual_labels,pred_labels):
@@ -90,17 +90,18 @@ def compute_results(actual_labels,pred_labels):
 
     f1=[2 * (p * r) / (p+r) if (p+r) !=0.0 else 0.0 for p, r in zip(precision,recall) ]
 
-    print ("Precision for all classes :",precision)
-    print ("Recall for all classes:",recall)
-    print ("F1 Score for all classes:",f1)
+    # print ("Precision for all classes :",precision)
+    # print ("Recall for all classes:",recall)
+    # print ("F1 Score for all classes:",f1)
 
 if __name__ == '__main__':
+    print("Na")
     x_train, y_train, x_test, y_test = load_dataset()
     MNB = TextClassifier()
     MNB.fit(x_train, y_train)
-    #MNB.fit_ec(x_train, y_train)
-
+    # MNB.fit_ec(x_train, y_train)
+    #
     accuracy,pred = MNB.predict(x_test, y_test)
     compute_results(y_test,pred)
-
+    #
     print("Accuracy {0:.4f}".format(accuracy))
